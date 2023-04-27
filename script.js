@@ -3,6 +3,7 @@ let requests = [];
 let users = [];
 
 function displayLoading() {
+  //Fonction qui va créer une card loading
   const wrapper = document.getElementById("wrapper");
 
   const loading = document.createElement("div");
@@ -12,10 +13,10 @@ function displayLoading() {
   card.classList.add("card_loading");
 
   const image = document.createElement("div");
-  image.classList.add("card__image");
+  image.classList.add("card_image");
 
   const content = document.createElement("div");
-  content.classList.add("card__content");
+  content.classList.add("card_content");
 
   const h2 = document.createElement("h2");
   const p = document.createElement("p");
@@ -29,32 +30,8 @@ function displayLoading() {
   wrapper.appendChild(loading);
 }
 
-window.addEventListener("load", (event) => {
-  for (let i = 0; i < 8; i++) {
-    displayLoading();
-  }
-});
-
-for (let i = 0; i < 10; i++) {
-  let request = fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      users.push(data.results[0]);
-    })
-    .catch((error) => console.error(error));
-  requests.push(request);
-}
-
-Promise.all(requests)
-  .then(() => {
-    for (let i = 0; i < users.length; i++) {
-      displayUser(users[i]);
-    }
-    document.querySelector("#wrapper").style.display = "none";
-  })
-  .catch((error) => console.error(error));
-
 function displayUser(user) {
+  //Fonction qui va créer une card user
   const userCards = document.getElementById("user-cards");
   const card = document.createElement("div");
   card.classList.add("card");
@@ -83,3 +60,29 @@ function displayUser(user) {
 
   userCards.appendChild(card);
 }
+
+window.addEventListener("load", () => {
+  for (let i = 0; i < 8; i++) {
+    displayLoading();
+  }
+});
+
+for (let i = 0; i < 8; i++) {
+  //On va faire plusieurs requête
+  let request = fetch(apiUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      users.push(data.results[0]);
+    })
+    .catch((error) => console.error(error));
+  requests.push(request);
+}
+
+Promise.all(requests)
+  .then(() => {
+    for (let i = 0; i < users.length; i++) {
+      displayUser(users[i]);
+    }
+    document.querySelector("#wrapper").style.display = "none";
+  })
+  .catch((error) => console.error(error));
